@@ -298,6 +298,16 @@ class EventsDatesGenerateResource(Resource):
             slicing_date[str(index)] = list_date_interval
         
         '''
+        get username for every user id
+        '''
+        dictionary_username_user = {}
+        for user_id in list_of_id:
+            user_query = Users.query.get(user_id)
+            user = marshal(user_query, Users.response_fields)
+            dictionary_username_user[user_id] = user['username']
+
+
+        '''
         match the date of every passenger in interval range
         '''
         date_match = {}
@@ -305,15 +315,14 @@ class EventsDatesGenerateResource(Resource):
             dict_user_opinion = {}
             for user_id in dictionary_date:
                 if(set(value).issubset(set(dictionary_date[user_id]))):
-                    dict_user_opinion[user_id] = "Bisa"
+                    dict_user_opinion[dictionary_username_user[user_id]] = "Bisa"
                 else:
-                    dict_user_opinion[user_id] = "Tidak Bisa"
+                    dict_user_opinion[dictionary_username_user[user_id]] = "Tidak Bisa"
 
             date_match[index] = value
             date_match["Interval "+index] = dict_user_opinion  
                 
-        return date_match, 200
-
+        return date_match, 200, {'Content-Type' : 'application/json'}
 
 class GetAllParticipantsEvent(Resource):
     """ Class to get all participant in Event """

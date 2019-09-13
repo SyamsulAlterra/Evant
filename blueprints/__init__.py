@@ -10,6 +10,7 @@ import config, os
 
 app = Flask(__name__)
 app.config['APP_DEBUG'] = True
+
 bcrypt = Bcrypt(app)
 CORS(app)
 

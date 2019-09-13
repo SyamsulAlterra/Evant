@@ -234,6 +234,7 @@ class EventsDatesGenerateResource(Resource):
         for invitation in invitation_query:
             invitation_new = marshal(invitation, Invitations.response_fields)
             list_of_id.append(invitation_new['invited_id'])
+        
 
         dictionary_date = {}
         for user_id in list_of_id:
@@ -270,8 +271,36 @@ class EventsDatesGenerateResource(Resource):
 
         for date in date_generated:
             date_interval.append(date.strftime("%d/%m/%Y"))
-                
-        return date_interval, 200
+        
+        '''
+        slicing generate date to find match date
+        ''' 
+
+        date_match_temporary = {}
+        for index in range(0, (len(date_interval)-duration)+1):
+            list_date_match_tem = []
+            list_date_interval = date_interval[index:(duration+index)]
+            if dt in list_date_interval:
+                list_date_match_tem.append(dt)
+            date_match_temporary[index] = list_date_match_tem
+
+        '''
+        generate date to find match date
+        '''                  
+        date_match = {}
+        for user_id in dictionary_date:
+            list_date_user=dictionary_date[user_id]
+            for user_date in list_date_user:
+                for dt in date_match_temporary:
+                    list_date_match = date_match_temporary[dt]
+                    
+
+               
+
+            date_match_temporary[index] = list_date_match_tem
+
+
+        return date_match_temporary, 200
 
 class GetAllParticipantsEvent(Resource):
     """ Class to get all participant in Event """
